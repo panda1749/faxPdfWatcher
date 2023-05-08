@@ -82,7 +82,7 @@ const notice = (event, fax) => {
     }
 }
 
-const ws = new WebSocket(`ws:192.168.1.${TEST?'2':'202'}:5050`);
+const ws = new WebSocket(`wss:192.168.1.${TEST?'2':'202'}:5050`);
 ws.addEventListener('open', e => {
     ws.send(JSON.stringify({event: 'getAll'}));
     ws.send(JSON.stringify({event: 'getPrinter'}));
