@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="./faxWatcher.css" rel="stylesheet"/>
+        <script defer src="./faxWatcher.js" ></script>
+        <template id="faxItem">
+            <div class="item">
+                <div class="time"></div>
+                <div class="tag"></div>
+                <div class="name"></div>
+            </div>
+        </template>
+    </head>
+    <body>
+        <div class="form">
+            <div id="itemCounter">0</div>
+            <div>
+                <label for="notice">通知</label>
+                <input type="checkbox" name="notice"/>
+            </div>
+            <div class="info"></div>
+        </div>
+        <div class="list"></div>
+    </body>
+</html>

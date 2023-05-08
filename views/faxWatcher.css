@@ -1,0 +1,77 @@
+.form {
+    margin: 10px;
+}
+
+.form #itemCounter::after {
+    content: '\4ef6'; /*件*/
+}
+
+.info {
+    border: solid 1px gray;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.info::before {
+    content: 'info:';
+    background-color: #ddd;
+    padding: 0 5px;
+}
+
+.list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    border: solid 1px;
+    border-radius: 5px;
+}
+
+.list.live {
+    border-color: limegreen;
+}
+
+.list.live::after {
+    content: 'watching...';
+    color: lightgreen;
+}
+
+.list.close,
+.list.error {
+    border-color: darkred;
+}
+
+.list.close::after,
+.list.error::after {
+    content: 'connection close...';
+    color: darkred;
+}
+
+.list .item {
+    padding: 5px;
+    border: solid 1px;
+    border-radius: 5px;
+    cursor: pointer;
+    /* user-select: none; */
+    -webkit-user-drag: element;
+}
+
+.list .item * {
+    pointer-events: none;
+}
+
+.list .item.delete {
+    color: red;
+}
+
+.list .item .tag {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.list .item .tag > * {
+    border: solid 1px;
+    border-radius: 99px;
+    padding: 0 5px;
+}
