@@ -1,0 +1,160 @@
+.form {
+    border: solid 1px;
+    border-start-start-radius: 5px;
+    border-start-end-radius: 5px;
+    display: flex;
+    padding: 10px;
+
+    & #itemCounter::after {
+        content: '\4ef6'; /*件*/
+    }
+
+    & .info {
+        border: solid 1px gray;
+        border-radius: 5px;
+        overflow: hidden;
+
+        &::before {
+            content: 'info:';
+            background-color: #ddd;
+            padding: 0 5px;
+        }
+    }
+}
+
+i.icon {
+    &::before {
+        content: '';
+        display: inline-block;
+        width: 1.5em;
+        height: 1.5em;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    &.notice.on::before {
+        background-image: url(/message.svg);
+    }
+
+    &.notice.off::before {
+        background-image: url(/message-off.svg);
+    }
+
+    &.popup::before {
+        background-image: url(/popup.svg);
+    }
+}
+@media (max-width:500px) {
+    
+}
+
+.list {
+    display: flex;
+    flex-wrap: wrap;
+    /* gap: 10px; */
+    padding: 10px;
+    border: solid 1px;
+    border-end-end-radius: 5px;
+    border-end-start-radius: 5px;
+    margin-top: -1px;
+
+    &::after {
+        flex-basis: 100%;
+    }
+
+    &.live {
+        border-color: limegreen;
+
+        &::after {
+            content: 'watching...';
+            color: lightgreen;
+        }
+    }
+
+    &.close,
+    &.error {
+        border-color: darkred;
+    
+        &::after {
+            content: 'connection close...';
+            color: darkred;
+        }
+    }
+}
+
+@keyframes itemFade {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0%;
+    }
+
+    100% {
+        transform: translateX(0%);
+        opacity: 100%;
+    }
+}
+
+.fadeIn {
+    animation: itemFade 1.5s ease;
+}
+
+.fadeOut {
+    animation: itemFade 1.5s ease 3s reverse;
+}
+
+.list .item {
+    position: relative;
+    padding: 10px;
+    cursor: pointer;
+    /* user-select: none; */
+    -webkit-user-drag: element;
+
+    & * {
+        pointer-events: none;
+    }
+
+    &.delete {
+        color: red;
+    }
+
+    & .time {
+        &::before{
+            content: "";
+            display: block;
+            height: 80%;
+            width: 0;
+            border-right: 1px solid #e0e0e0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        &::after{
+            content: "";
+            display: block;
+            height: 0;
+            width: 80%;
+            border-bottom: 1px solid #e0e0e0;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+    }
+
+    & .tag {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    
+        & > * {
+            border: solid 1px;
+            border-radius: 99px;
+            padding: 0 5px;
+        }
+    }
+}

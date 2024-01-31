@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="./faxWatcher.css" rel="stylesheet"/>
-        <script defer src="./faxWatcher.js" ></script>
+        <link rel="icon" type="image/svg+xml" href="fax.svg" />
+        <link rel="stylesheet" href="./view.css"/>
+        <script defer type="module" src="./view.js" ></script>
         <template id="faxItem">
             <div class="item">
                 <div class="time"></div>
@@ -14,12 +15,14 @@
     <body>
         <div class="form">
             <div id="itemCounter">0</div>
-            <div>
+            <!-- <div>
                 <label for="notice">通知</label>
                 <input type="checkbox" name="notice"/>
-            </div>
-            <div class="info"></div>
+            </div> -->
+            <i id="notice" class="icon notice on"></i>
+            <i id="popupBtn" class="icon popup"></i>
+            <!-- <div id="popupBtn"><img src="popup.svg" /></div> -->
         </div>
-        <div class="list"></div>
+        <div class="list card"></div>
     </body>
 </html>

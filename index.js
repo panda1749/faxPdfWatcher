@@ -1,7 +1,25 @@
-require('dotenv').config();
-const path = require('path');
-const ws = require('ws');
-const {FaxWatcher} = require('./faxWatcher');
+import http from 'http';
+import https from 'https';
+import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
+import { WebSocketServer } from 'ws';
+import express from 'express';
+import { FaxWatcher } from './faxWatcher.cjs';
+
+// require('dotenv').config();
+// const path = require('path');
+// const fs = require('fs');
+// const ws = require('ws');
+// const express = require('express');
+// const {FaxWatcher} = require('./faxWatcher');
+
+dotenv.config();
+
+const SSLKEY_PATH = process.env.SSLKEY;
+const SSLCRT_PATH = process.env.SSLCRT;
+const SSLPFX_PATH = process.env.SSLPFX;
+const SSLPFX_PASS = process.env.SSLPFXPASS;
 
 const faxPath = process.env.FAXPATH;
 const copyPath = process.env.COPYPATH;
@@ -28,11 +46,37 @@ const createSimpleFaxData = fax => {
 const watcher = new FaxWatcher(printerList, copyPath);
 watcher.on('error', e => console.trace(e));
 
-const server = new ws.Server({
-    port: 5050,
+const app = express();
+// const server = https.createServer({
+//     key: fs.readFileSync(SSLKEY_PATH),
+//     cert: fs.readFileSync(SSLCRT_PATH),
+// }, app);
+let opt = null;
+if(SSLPFX_PATH != null) {
+    console.log('pfx enable');
+    opt = {
+        pfx: fs.readFileSync(SSLPFX_PATH),
+        passphrase: SSLPFX_PASS,
+    };
+} else if(SSLKEY_PATH != null) {
+    console.log('cert enable');
+    opt = {
+        key: fs.readFileSync(SSLKEY_PATH),
+        cert: fs.readFileSync(SSLCRT_PATH),
+    };
+}
+const server = opt == null ? http.createServer(app) : https.createServer(opt, app);
+
+app.get('/', function(req, res) {
+    res.redirect('/view.html')
+});
+app.use(express.static('docs'));
+
+const wss = new WebSocketServer({
+    server,
     clientTracking: true,
 });
-server.on('connection', ws => {
+wss.on('connection', ws => {
     ws.on('message', message => {
         const receiveData = JSON.parse(message);
 
@@ -61,7 +105,7 @@ watcher.on('create', fax => {
         data: createSimpleFaxData(fax)
     };
     const sendDataStr = JSON.stringify(sendData);
-    server.clients.forEach( ws => ws.send(sendDataStr));
+    wss.clients.forEach( ws => ws.send(sendDataStr));
 });
 
 watcher.on('rename', fax => {
@@ -70,7 +114,7 @@ watcher.on('rename', fax => {
         data: createSimpleFaxData(fax)
     };
     const sendDataStr = JSON.stringify(sendData);
-    server.clients.forEach( ws => ws.send(sendDataStr));
+    wss.clients.forEach( ws => ws.send(sendDataStr));
 });
 
 watcher.on('delete', fax => {
@@ -79,5 +123,7 @@ watcher.on('delete', fax => {
         data: createSimpleFaxData(fax)
     };
     const sendDataStr = JSON.stringify(sendData);
-    server.clients.forEach( ws => ws.send(sendDataStr));
+    wss.clients.forEach( ws => ws.send(sendDataStr));
 });
+
+server.listen( opt == null ? 80 : 443);
